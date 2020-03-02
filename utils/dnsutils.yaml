@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-utils
+spec:
+  containers:
+    - name: dnsutils
+      image: tutum/dnsutils
+      imagePullPolicy: IfNotPresent
+      command:
+        - "sleep"
+        - "3600"

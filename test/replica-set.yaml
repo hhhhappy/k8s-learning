@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs-test
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: rs-test-label
+  template:
+    metadata:
+      labels:
+        app: rs-test-label
+    spec:
+      containers:
+        - name: busy-box
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - "sleep 2500"

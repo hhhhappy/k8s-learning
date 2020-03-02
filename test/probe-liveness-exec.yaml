@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test-pod
+  labels:
+    app: nginx-test
+spec:
+  containers:
+    - name: nginx-main
+      image: busybox
+      imagePullPolicy: IfNotPresent
+      command:
+        - sh
+        - -c
+        - "touch /tmp/live; sleep 10; rm -rf /tmp/live; sleep 10000"
+      livenessProbe:
+        exec:
+          command:
+            - test
+            - -e
+            - /tmp/live
+        periodSeconds: 1
+        initialDelaySeconds: 1

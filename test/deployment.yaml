@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: deploy-test
+  template:
+    metadata:
+      labels:
+        app: deploy-test
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          imagePullPolicy: IfNotPresent
