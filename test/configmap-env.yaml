@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-cm
+data:
+  log_level: Debug
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  volumes:
+    - name: config-volume
+      configMap:
+        name: test-cm
+  containers:
+    - name: busy
+      image: busybox
+      imagePullPolicy: IfNotPresent
+      command:
+        - /bin/sh
+        - -c
+        - "echo $(log_level) $(LOG_LEVEL) && env && ls /etc/config && cat /etc/config/log_level"
+
+      # first method
+      env:
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: test-cm
+              key: log_level
+      # second method
+      envFrom:
+        - configMapRef:
+            name: test-cm
+
+      # mount as volume
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+# output will be
+# Debug Debug
+# log_level=Debug  // second method
+# LOG_LEVEL=Debug // first method
+# log_level // mount as volume
+# Debug
